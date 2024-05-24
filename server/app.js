@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const { performScraping, initiateBrowser } = require("./performScraping");
+const { initiateBrowser } = require("./performScraping");
 const authRoute = require("./routes/auth-routes");
 const userRoute = require("./routes/user-routes");
 const passportSetup = require("./config/passport-setup");
@@ -34,17 +34,6 @@ app.use("/auth", authRoute);
 
 // user routes
 app.use("/user", userRoute);
-
-// scrape route
-app.get("/scrape", async (req, res) => {
-  const { url, selector } = req.body;
-  try {
-    const result = await performScraping(browser, url, selector);
-    res.send(result);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
 
 // server
 const PORT = process.env.PORT || 3000;
