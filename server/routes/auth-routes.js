@@ -1,14 +1,12 @@
+require("dotenv").config();
 const authRoute = require("express").Router();
 const passport = require("passport");
 
-// auth login
-authRoute.get("/login", (req, res) => {
-  res.send("Login page");
-});
-
 // auth logout
 authRoute.get("/logout", (req, res) => {
-  res.send("Logging out");
+  // handle with passport
+  req.logout();
+  res.redirect(process.env.FRONTEND_URL);
 });
 
 // auth with google
@@ -19,13 +17,20 @@ authRoute.get(
   })
 );
 
+// login failed
+authRoute.get("/failed", (req, res) => {
+  res.status(401).json({
+    message: "Failed to login",
+  });
+});
+
 // callback route for google to redirect to
 authRoute.get(
   "/google/redirect",
-  passport.authenticate("google"),
-  (req, res) => {
-    res.redirect("/user/profile");
-  }
+  passport.authenticate("google", {
+    successRedirect: process.env.FRONTEND_URL,
+    failureRedirect: "/auth/failed",
+  })
 );
 
 module.exports = authRoute;

@@ -3,7 +3,18 @@ const authCheck = require("../config/auth-check");
 
 // profile
 userRoute.get("/profile", authCheck, (req, res) => {
-  res.send("Profile page");
+  if (req.user) {
+    res.json({
+      success: true,
+      message: "User is authenticated",
+      user: req.user,
+    });
+  } else {
+    res.status(401).json({
+      success: false,
+      message: "Not authenticated",
+    });
+  }
 });
 
 module.exports = userRoute;
