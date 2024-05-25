@@ -1,5 +1,5 @@
 const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("../models/user");
 
 // serialize user
@@ -26,19 +26,21 @@ passport.use(
       // passport callback function
       // check if user already exists in our db
       User.findOne({ googleId: profile.id }).then((currentUser) => {
+        console.log(profile);
         if (currentUser) {
           // already have this user
           done(null, currentUser);
         } else {
-          const newUser = new User({
+          new User({
             name: profile.displayName,
             profile: profile.photos[0].value,
             googleId: profile.id,
-          });
-          // Save the new user to the database
-          newUser.save().then((user) => {
-            done(null, user);
-          });
+            email: profile.emails[0].value
+          })
+            .save()
+            .then((newUser) => {
+              done(null, newUser);
+            });
         }
       });
     }

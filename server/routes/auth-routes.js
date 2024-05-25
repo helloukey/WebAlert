@@ -13,7 +13,7 @@ authRoute.get("/logout", (req, res) => {
 authRoute.get(
   "/google",
   passport.authenticate("google", {
-    scope: ["profile"],
+    scope: ["profile", "email"],
   })
 );
 

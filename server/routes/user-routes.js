@@ -1,10 +1,9 @@
 const userRoute = require("express").Router();
-const authCheck = require("../config/auth-check");
 
 // profile
-userRoute.get("/profile", authCheck, (req, res) => {
+userRoute.get("/profile",  (req, res) => {
   if (req.user) {
-    res.json({
+    res.status(200).json({
       success: true,
       message: "User is authenticated",
       user: req.user,

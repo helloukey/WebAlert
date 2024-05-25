@@ -1,21 +1,30 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
 const { initiateBrowser } = require("./performScraping");
+const passport = require("passport");
+const passportSetup = require("./config/passport-setup");
 const authRoute = require("./routes/auth-routes");
 const userRoute = require("./routes/user-routes");
-const passportSetup = require("./config/passport-setup");
-const mongoose = require("mongoose");
-const cookieSession = require("express-session");
-const passport = require("passport");
+const session = require("express-session");
 
 // app
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(
-  cookieSession({
-    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 },
-    secret: [process.env.COOKIE_KEY],
-    resave: false,
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
+app.use(
+  session({
+    cookie: { secure: false, maxAge: 30 * 24 * 60 * 60 * 1000 },
+    secret: process.env.COOKIE_KEY,
+    resave: true,
     saveUninitialized: true,
   })
 );
