@@ -7,6 +7,7 @@ const passport = require("passport");
 const passportSetup = require("./config/passport-setup");
 const authRoute = require("./routes/auth-routes");
 const userRoute = require("./routes/user-routes");
+const alertRoute = require("./routes/alert-routes");
 const session = require("express-session");
 
 // app
@@ -15,8 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:3000",
-    methods: "GET,POST,PUT,DELETE",
+    origin: ["http://localhost:3000", "http://localhost:3000/"],
     credentials: true,
   })
 );
@@ -44,6 +44,9 @@ app.use("/auth", authRoute);
 // user routes
 app.use("/user", userRoute);
 
+// alert routes
+app.use("/scrape", alertRoute);
+
 // server
 const PORT = process.env.PORT || 3000;
 
@@ -62,3 +65,6 @@ const init = async () => {
 };
 
 init();
+
+// export browser for scraping
+module.exports = { browser };

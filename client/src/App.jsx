@@ -8,9 +8,11 @@ import AOS from "aos";
 
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
 
   useEffect(() => {
@@ -39,7 +41,10 @@ function App() {
       },
     })
       .then((res) => res.json())
-      .then((data) => setUser(data.user))
+      .then((data) => {
+        setUser(data.user);
+        setLoading(false);
+      })
       .catch((err) => console.log(err));
   }, []);
 
@@ -51,6 +56,14 @@ function App() {
           path="/signin"
           element={!user ? <SignIn /> : <Navigate to="/" />}
         />
+        {!loading ? (
+          <Route
+            path="/dashboard"
+            element={
+              user ? <Dashboard user={user} /> : <Navigate to="/signin" />
+            }
+          />
+        ) : null}
       </Routes>
     </>
   );
