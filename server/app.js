@@ -9,6 +9,7 @@ const authRoute = require("./routes/auth-routes");
 const userRoute = require("./routes/user-routes");
 const alertRoute = require("./routes/alert-routes");
 const session = require("express-session");
+const performCron = require("./performCron");
 
 // app
 const app = express();
@@ -57,6 +58,8 @@ const init = async () => {
       console.log(`Server is running on port ${PORT}`);
       mongoose.connect(process.env.MONGODB_URI).then(() => {
         console.log("Connected to MongoDB");
+        // Cron Job
+        performCron(browser);
       });
     });
   } catch (error) {
